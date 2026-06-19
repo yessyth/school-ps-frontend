@@ -96,6 +96,7 @@ export const testsEntityApi = {
         nombre,
         anio: new Date().getFullYear(),
         valor,
+        estado_complemento: 'Activo',
       }),
     });
   },

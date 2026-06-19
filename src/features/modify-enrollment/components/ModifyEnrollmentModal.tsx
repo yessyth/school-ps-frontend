@@ -5,6 +5,7 @@ import type { StudentBalance } from '@/entities/student/model/types';
 import { Button } from '@/shared/ui/atoms/Button';
 import { Input } from '@/shared/ui/atoms/Input';
 import { Modal } from '@/shared/ui';
+import { useToast } from '@/shared/ui';
 
 interface ModifyEnrollmentModalProps {
   isOpen: boolean;
@@ -25,6 +26,7 @@ export const ModifyEnrollmentModal = ({
   const [editReason, setEditReason] = useState('');
   const [editObs, setEditObs] = useState('');
   const { submitModification, loading } = useModifyEnrollment();
+  const { showToast } = useToast();
 
   const handleEditSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
@@ -35,7 +37,7 @@ export const ModifyEnrollmentModal = ({
     try {
       const parsedValue = parseInt(newVal, 10);
       if (isNaN(parsedValue) || parsedValue < 0) {
-        alert('El valor debe ser un número entero mayor o igual a 0.');
+        showToast('El valor debe ser un número entero mayor o igual a 0.', 'error');
         return;
       }
 
@@ -62,7 +64,7 @@ export const ModifyEnrollmentModal = ({
           },
         ];
       } else {
-        alert('Concepto inválido para edición');
+        showToast('Concepto inválido para edición.', 'error');
         return;
       }
 
@@ -70,14 +72,14 @@ export const ModifyEnrollmentModal = ({
 
       onClose();
       await onEditSuccess();
-      alert('Edición registrada exitosamente');
+      showToast('Edición registrada exitosamente.', 'success');
     } catch (error: unknown) {
       console.error('Error modifying enrollment:', error);
       const errMsg =
         error instanceof Error
           ? error.message
           : 'Error al modificar matrícula. Por favor revise el log.';
-      alert(errMsg);
+      showToast(errMsg, 'error');
     }
   };
 

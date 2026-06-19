@@ -7,84 +7,33 @@
   flex-direction: column;
   gap: 1.5rem;
   animation: fadeIn 0.4s ease-out;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-/* El .card global de index.css tiene margin-bottom: 1.5rem;
-   dentro del flex con gap, eso generaría doble espaciado */
-.enrollment-view .card {
-  margin-bottom: 0;
-}
-
-/* Botones con la misma altura que los inputs */
-.enrollment-view .btn-md {
-  padding: 0.75rem 1.25rem;
-  min-height: 42px;
-}
-
-/* Botón primario — gradiente vinotinto */
-.enrollment-view .btn-primary {
-  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-accent) 100%);
-  color: var(--text-on-brand);
-  box-shadow: 0 2px 4px rgba(123, 29, 29, 0.2);
-  border: none;
-}
-
-.enrollment-view .btn-primary:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 6px rgba(123, 29, 29, 0.3);
-  background: linear-gradient(135deg, var(--brand-primary-hover) 0%, var(--brand-primary) 100%);
-}
-
-.enrollment-view .btn-primary:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(123, 29, 29, 0.2);
-}
-
-.enrollment-view .btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  filter: grayscale(0.5);
-  background: var(--border);
-  box-shadow: none;
-}
-
-/* Botón outline */
-.enrollment-view .btn-outline {
-  border: 1px solid var(--card-border);
-  background: var(--card-bg);
+/* Page titles */
+.enrollment-view .page-title h1 {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
   color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.025em;
 }
 
-.enrollment-view .btn-outline:hover:not(:disabled) {
-  border-color: var(--text-muted);
-  background-color: #f9fafb;
-}
-
-/* Botón secondary */
-.enrollment-view .btn-secondary {
-  background: white;
-  border: 1px solid var(--card-border);
-  color: var(--text-primary);
-}
-
-.enrollment-view .btn-secondary:hover:not(:disabled) {
-  background-color: #f9fafb;
-  border-color: #d1d5db;
-}
-
-/* Botón link — TuitionManager.css lo define globalmente;
-   aquí solo se sobreescribe lo necesario para enrollment */
-.enrollment-view .btn-link {
-  color: var(--text-secondary);
+.enrollment-view .page-title p {
   font-size: var(--font-size-sm);
+  color: var(--text-muted);
 }
 
-.enrollment-view .btn-link:hover {
-  color: var(--brand-primary);
+/* Page titles custom wrapper */
+.enrollment-page-header {
+  margin-bottom: 4px;
 }
 
-/* Search header & info box */
-.enrollment-view .search-header {
+/* Search Header & Info Box */
+.enrollment-view .search-header,
+.modal-content .search-header {
   display: flex;
   align-items: center;
   font-weight: 600;
@@ -94,7 +43,8 @@
   gap: 0.5rem;
 }
 
-.enrollment-view .search-info {
+.enrollment-view .search-info,
+.modal-content .search-info {
   background-color: var(--info-bg);
   border: 1px solid var(--info-border);
   border-radius: var(--radius-md);
@@ -107,7 +57,7 @@
   gap: 0.5rem;
 }
 
-/* Banner de selección */
+/* Custom selection banner */
 .enrollment-view .selected-banner {
   background-color: var(--info-bg);
   border: 1px solid var(--info-border);
@@ -125,10 +75,12 @@
   font-weight: 500;
 }
 
-/* Banner pendiente */
-.enrollment-view .pending-banner {
+/* Pending banner (Warning) */
+.enrollment-view .pending-banner,
+.modal-content .pending-banner {
   background-color: var(--status-yellow-bg);
   border: 1px solid var(--status-yellow-border);
+  color: var(--status-yellow);
   border-radius: var(--radius-md);
   padding: 1rem;
   display: flex;
@@ -136,15 +88,38 @@
   align-items: center;
 }
 
-.enrollment-view .pending-banner p {
+.enrollment-view .pending-banner p,
+.modal-content .pending-banner p {
   color: var(--status-yellow);
   margin: 0;
   font-size: var(--font-size-sm);
   font-weight: 500;
 }
 
-/* Banner de advertencia roja */
-.enrollment-view .warning-banner {
+/* Success banner (Green status) */
+.enrollment-view .success-banner,
+.modal-content .success-banner {
+  background-color: var(--status-green-bg);
+  border: 1px solid var(--status-green-border);
+  color: var(--status-green);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.enrollment-view .success-banner p,
+.modal-content .success-banner p {
+  color: var(--status-green);
+  margin: 0;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+/* Red alert/warning box */
+.enrollment-view .warning-banner,
+.modal-content .warning-banner {
   background-color: var(--status-red-bg);
   border: 1px solid var(--status-red-border);
   color: var(--status-red);
@@ -157,12 +132,13 @@
   gap: 0.5rem;
 }
 
-.enrollment-view .warning-banner p {
+.enrollment-view .warning-banner p,
+.modal-content .warning-banner p {
   color: var(--status-red);
   margin: 0;
 }
 
-/* Radio button */
+/* Radio Button style override */
 .enrollment-view .data-table input[type='radio'] {
   cursor: pointer;
   width: 16px;
@@ -170,7 +146,7 @@
   accent-color: var(--brand-primary);
 }
 
-/* Table */
+/* Table container styling match */
 .enrollment-view .table-container {
   border-radius: var(--radius-lg);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -181,6 +157,10 @@
   font-size: var(--font-size-xs);
   letter-spacing: 0.05em;
   text-transform: uppercase;
+}
+
+.enrollment-view .data-table tr.selected-row {
+  background-color: var(--status-red-bg) !important;
 }
 
 /* ── Search page ─────────────────────────────── */

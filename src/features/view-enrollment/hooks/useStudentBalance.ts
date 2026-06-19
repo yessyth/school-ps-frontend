@@ -7,11 +7,11 @@ export const useStudentBalance = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchBalance = useCallback(async (id: number) => {
+  const fetchBalance = useCallback(async (id: number, year?: number) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getStudentBalance(id);
+      const data = await getStudentBalance(id, year);
       setBalance(data);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Error fetching balance');

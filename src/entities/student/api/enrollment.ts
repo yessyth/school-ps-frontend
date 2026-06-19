@@ -131,7 +131,6 @@ export interface ComplementaryConcept {
   anio: number;
   valor: number;
   estado_complemento: string;
-  uso_matricula: boolean;
 }
 
 export interface CreateComplementaryPayload {
@@ -139,7 +138,6 @@ export interface CreateComplementaryPayload {
   anio: number;
   valor: number;
   estado_complemento: string;
-  uso_matricula: boolean;
 }
 
 export const enrollmentApi = {
@@ -276,5 +274,15 @@ export const enrollmentApi = {
         body: JSON.stringify(payload),
       },
     );
+  },
+  registerEnrollment: async (payload: {
+    estudiante_id: number;
+    periodo_id: number;
+    anio: number;
+  }): Promise<{ matricula_id: number; valor_total: number }> => {
+    return fetchApi<{ matricula_id: number; valor_total: number }>('/enrollment/register', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
   },
 };

@@ -5,6 +5,7 @@ import { Button } from '@/shared/ui/atoms/Button';
 import { Input } from '@/shared/ui/atoms/Input';
 import { useAssignConcept } from '../hooks/useAssignConcept';
 import type { ComplementaryConcept } from '../types';
+import { useToast } from '@/shared/ui';
 
 interface AssignComplementaryModalProps {
   isOpen: boolean;
@@ -23,16 +24,16 @@ export const AssignComplementaryModal = ({
 }: AssignComplementaryModalProps) => {
   const [concepts, setConcepts] = useState<ComplementaryConcept[]>([]);
   const [selectedConceptId, setSelectedConceptId] = useState('');
-  const [descuento, setDescuento] = useState(0);
+  const [descuento, setDescuento] = useState('0');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { fetchConcepts, createConcept, assignConcept } = useAssignConcept();
+  const { showToast } = useToast();
 
   // Inline creation state
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [newConceptName, setNewConceptName] = useState('');
   const [newConceptValue, setNewConceptValue] = useState('');
-  const [newConceptUsoMatricula, setNewConceptUsoMatricula] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
 
   const loadConcepts = useCallback(async () => {
@@ -57,10 +58,9 @@ export const AssignComplementaryModal = ({
       const timer = setTimeout(() => {
         void loadConcepts();
         setShowCreateForm(false);
-        setDescuento(0);
+        setDescuento('0');
         setNewConceptName('');
         setNewConceptValue('');
-        setNewConceptUsoMatricula(false);
       }, 0);
       return () => {
         clearTimeout(timer);
@@ -80,11 +80,10 @@ export const AssignComplementaryModal = ({
         throw new Error('El valor del concepto debe ser un número entero mayor o igual a 0.');
       }
       const res = await createConcept({
-        tipo_complementario: newConceptName.trim(),
+        nombre: newConceptName.trim(),
         anio: year,
         valor: parsedValue,
         estado_complemento: 'Activo',
-        uso_matricula: newConceptUsoMatricula,
       });
 
       const newConcept: ComplementaryConcept = {
@@ -93,7 +92,6 @@ export const AssignComplementaryModal = ({
         anio: year,
         valor: parsedValue,
         estado_complemento: 'Activo',
-        uso_matricula: newConceptUsoMatricula,
       };
 
       setConcepts((prev) => [...prev, newConcept]);
@@ -101,8 +99,7 @@ export const AssignComplementaryModal = ({
       setShowCreateForm(false);
       setNewConceptName('');
       setNewConceptValue('');
-      setNewConceptUsoMatricula(false);
-      alert('Concepto complementario creado exitosamente en el catálogo');
+      showToast('Concepto complementario creado exitosamente en el catálogo.', 'success');
     } catch (err: unknown) {
       console.error(err);
       setError(err instanceof Error ? err.message : 'Error al crear el concepto complementario.');
@@ -120,18 +117,19 @@ export const AssignComplementaryModal = ({
       setError(null);
 
       const targetConcept = concepts.find((c) => c.id.toString() === selectedConceptId);
-      if (targetConcept && descuento > targetConcept.valor) {
+      const parsedDescuento = descuento === '' ? 0 : Number(descuento);
+      if (targetConcept && parsedDescuento > targetConcept.valor) {
         throw new Error(
-          `El descuento ($${descuento.toString()}) no puede superar el valor del concepto ($${targetConcept.valor.toString()}).`,
+          `El descuento ($${parsedDescuento.toString()}) no puede superar el valor del concepto ($${targetConcept.valor.toString()}).`,
         );
       }
 
       await assignConcept(studentId, {
         complementario_id: Number(selectedConceptId),
-        descuento: descuento,
+        descuento: parsedDescuento,
       });
 
-      alert('Concepto asignado exitosamente');
+      showToast('Concepto asignado exitosamente.', 'success');
       onClose();
       await onSuccess();
     } catch (err: unknown) {
@@ -225,7 +223,7 @@ export const AssignComplementaryModal = ({
               min={0}
               value={descuento}
               onChange={(e) => {
-                setDescuento(Number(e.target.value));
+                setDescuento(e.target.value);
               }}
               disabled={concepts.length === 0}
             />
@@ -291,35 +289,6 @@ export const AssignComplementaryModal = ({
               }}
               disabled={createLoading}
             />
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '4px 0' }}>
-              <input
-                id="usoMatriculaCheck"
-                type="checkbox"
-                checked={newConceptUsoMatricula}
-                onChange={(e) => {
-                  setNewConceptUsoMatricula(e.target.checked);
-                }}
-                disabled={createLoading}
-                style={{
-                  width: '16px',
-                  height: '16px',
-                  cursor: 'pointer',
-                  accentColor: 'var(--brand-primary)',
-                }}
-              />
-              <label
-                htmlFor="usoMatriculaCheck"
-                style={{
-                  fontSize: '0.875rem',
-                  color: 'var(--text-main)',
-                  cursor: 'pointer',
-                  userSelect: 'none',
-                }}
-              >
-                Cobrar automáticamente en matrículas nuevas (uso_matricula)
-              </label>
-            </div>
 
             <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
               <button

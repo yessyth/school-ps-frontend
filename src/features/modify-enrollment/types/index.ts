@@ -4,15 +4,13 @@ export interface ComplementaryConcept {
   anio: number;
   valor: number;
   estado_complemento: string;
-  uso_matricula: boolean;
 }
 
 export interface CreateComplementaryPayload {
-  tipo_complementario: string;
+  nombre: string;
   anio: number;
   valor: number;
   estado_complemento: string;
-  uso_matricula: boolean;
 }
 
 export interface ModifyEnrollmentResponse {

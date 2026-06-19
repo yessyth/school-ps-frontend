@@ -137,18 +137,8 @@ export const ManualEnrollmentModal = ({
               setFormData((s: ManualEnrollmentPayload) => ({ ...s, grado: e.target.value }));
             }}
             disabled={loading}
-            style={{
-              width: '100%',
-              padding: '10px 12px',
-              borderRadius: 'var(--radius-md, 8px)',
-              border: '1px solid var(--border)',
-              backgroundColor: '#fff',
-              fontSize: '1rem',
-              color: 'var(--text-main)',
-              outline: 'none',
-              transition: 'border-color 0.2s',
-              cursor: 'pointer',
-            }}
+            className="input-field"
+            style={{ cursor: 'pointer' }}
           >
             {GRADES.map((g) => (
               <option key={g} value={g}>
@@ -171,51 +161,6 @@ export const ManualEnrollmentModal = ({
           }}
           disabled={loading}
         />
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-          <div className="input-container">
-            <label className="input-label">Periodo Académico *</label>
-            <select
-              value={formData.periodo_id}
-              onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                setFormData((s: ManualEnrollmentPayload) => ({
-                  ...s,
-                  periodo_id: Number(e.target.value),
-                }));
-              }}
-              disabled={loading}
-              style={{
-                width: '100%',
-                padding: '10px 12px',
-                borderRadius: 'var(--radius-md, 8px)',
-                border: '1px solid var(--border)',
-                backgroundColor: '#fff',
-                fontSize: '1rem',
-                color: 'var(--text-main)',
-                outline: 'none',
-                transition: 'border-color 0.2s',
-                cursor: 'pointer',
-              }}
-            >
-              {[1, 2, 3, 4].map((p) => (
-                <option key={p} value={p}>
-                  Periodo {p}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <Input
-            label="Año Lectivo *"
-            type="number"
-            required
-            value={formData.anio}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              setFormData((s: ManualEnrollmentPayload) => ({ ...s, anio: Number(e.target.value) }));
-            }}
-            disabled={loading}
-          />
-        </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '8px' }}>
           <Button type="button" variant="outline" onClick={onClose} disabled={loading}>

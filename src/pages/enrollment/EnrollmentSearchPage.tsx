@@ -31,9 +31,14 @@ export const EnrollmentSearch = () => {
 
   const handleManage = useCallback(() => {
     if (selectedStudent !== null) {
-      void navigate({ to: `/dashboard/enrollment/student/${selectedStudent.toString()}/` });
+      const studentObj = students.find((s) => s.estudiante_id === selectedStudent);
+      const targetYear = studentObj ? studentObj.anio : new Date().getFullYear();
+      void navigate({
+        to: `/dashboard/enrollment/student/${selectedStudent.toString()}/`,
+        search: { year: targetYear },
+      });
     }
-  }, [navigate, selectedStudent]);
+  }, [navigate, selectedStudent, students]);
 
   const handleManualSuccess = (studentId: number) => {
     setIsManualModalOpen(false);
@@ -97,6 +102,7 @@ export const EnrollmentSearch = () => {
                   onClick={() => {
                     setSelectedStudent(student.estudiante_id);
                   }}
+                  className={selectedStudent === student.estudiante_id ? 'selected-row' : ''}
                   style={{ cursor: 'pointer' }}
                 >
                   <td>
@@ -117,22 +123,43 @@ export const EnrollmentSearch = () => {
                     <StatusBadge status={student.estado_matricula} />
                   </td>
                   <td>{student.pagos_realizados.toString()}</td>
-                  <td style={{ fontWeight: 600 }}>${student.saldo_pendiente.toLocaleString()}</td>
+                  <td style={{ fontWeight: 600 }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '8px',
+                      }}
+                    >
+                      <span>${student.saldo_pendiente.toLocaleString()}</span>
+                      {selectedStudent === student.estudiante_id && (
+                        <Button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleManage();
+                          }}
+                          variant="primary"
+                          size="sm"
+                          style={{
+                            padding: '4px 8px',
+                            fontSize: '0.8rem',
+                            height: '28px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          Gestionar
+                        </Button>
+                      )}
+                    </div>
+                  </td>
                 </tr>
               ))
             )}
           </tbody>
         </table>
       </div>
-
-      {selectedStudent !== null && (
-        <div className="selected-banner">
-          <p>Ha seleccionado un estudiante. Puede continuar con la gestión de matrícula.</p>
-          <Button onClick={handleManage} variant="primary">
-            Gestionar
-          </Button>
-        </div>
-      )}
 
       {/* Manual enrollment modal */}
       <ManualEnrollmentModal
